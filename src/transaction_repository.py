@@ -1,8 +1,8 @@
 import csv
-from paths import TRANSACTION_CSV_PATH
+from .paths import TRANSACTION_CSV_PATH
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from transaction import Transaction
+    from .transaction import Transaction
 
 class TransactionRepository:
     COLUMNS = ["date", "amount", "type", "memo"]

@@ -1,4 +1,6 @@
 from src.transaction import Transaction, TransactionType
+from src.transaction_repository import TransactionRepository
+from src.paths import TRANSACTION_CSV_PATH
 from datetime import date
 
 def transaction_normal_test():
@@ -24,6 +26,16 @@ def transaction_negative_amount_test():
     type_ = TransactionType.INCOME
     memo = "bonus"
 
-    t = Transaction(date_, amount, type_, memo)
+    try:
+        t = Transaction(date_, amount, type_, memo)
+        assert False, "this test should be error"
+    except (AssertionError, ValueError):
+        pass
+
+def transaction_repository_create_file_test():
+    tr = TransactionRepository()
+    assert TRANSACTION_CSV_PATH.exists()
+
+### test ###
 
 transaction_negative_amount_test()
