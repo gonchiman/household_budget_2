@@ -1,39 +1,36 @@
-import csv
 from datetime import date
 
-from src.paths import TRANSACTION_CSV_PATH
 from src.transaction import Transaction, TransactionType
 from src.transaction_repository import TransactionRepository
 from src.transaction_service import TransactionService
 
 
+class FakeRepository:
+    def __init__(self):
+        self.saved_transaction = None
+
+    def add(self, transaction: Transaction):
+        self.saved_transaction = transaction
+
+
 def test_add_transaction():
-    TRANSACTION_CSV_PATH.unlink(missing_ok=True)
+    repo = FakeRepository()
+    service = TransactionService(repo)
 
     date_ = date.today()
     amount = 1000
     type_ = TransactionType.INCOME
     memo = "bonus"
 
-    tr = TransactionRepository()
-    ts = TransactionService(tr)
-    ts.add_transaction(
+    service.add_transaction(
         date_,
         amount,
         type_,
         memo
     )
 
-    expected = {
-        "date": date_.isoformat(),
-        "amount": str(amount),
-        "type": type_.value,
-        "memo": memo
-    }
-
-    with open(TRANSACTION_CSV_PATH, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        rows = list(reader)
-
-        assert len(rows) == 1
-        assert rows[0] == expected
+    assert repo.saved_transaction is not None
+    assert repo.saved_transaction.transaction_date == date_
+    assert repo.saved_transaction.amount == amount
+    assert repo.saved_transaction.transaction_type == type_
+    assert repo.saved_transaction.memo == memo
