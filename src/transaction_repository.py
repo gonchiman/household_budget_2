@@ -1,8 +1,13 @@
 import csv
+from datetime import date
+
+from src.transaction import TransactionType
 from .paths import TRANSACTION_CSV_PATH
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from .transaction import Transaction
+
 
 class TransactionRepository:
     COLUMNS = ["date", "amount", "type", "memo"]
@@ -15,6 +20,23 @@ class TransactionRepository:
         with open(TRANSACTION_CSV_PATH, "a", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow(self._transaction_to_csv_row(transaction))
+
+    def get_all(self) -> list[Transaction]:
+        transactions = []
+
+        with open(TRANSACTION_CSV_PATH, "r", newline="", encodint="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                transactions.append(
+                    Transaction(
+                        transaction_date=date.fromisoformat(row["date"]),
+                        amount=int(row["amount"]),
+                        transaction_type=TransactionType(row["type"]),
+                        memo=row["memo"],
+                    )
+                )
+    
+        return transactions
 
     def _create_file_with_header(self) -> None:
         with open(TRANSACTION_CSV_PATH, "w", newline="", encoding="utf-8") as f:
