@@ -1,0 +1,18 @@
+<h1>家計簿</h1>
+
+<form action="/add" method="post">
+    <input type="date" name="transaction_date" required>
+    <input type="number" name="amount" min="1" required>
+    <select name="transaction_type">
+        <option value="income">収入</option>
+        <option value="outcome">支出</option>
+    </select>
+    <input type="text" name="memo">
+    <button type="submit">追加</button>
+</form>
+
+<ul>
+{% for t in transactions %}
+    <li>{{ t.transaction_date }} {{ t.amount}} {{ t.transaction_type.value }} {{ t.memo }}</li>
+{% endfor %}
+</ul>
