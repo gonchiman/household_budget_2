@@ -1,12 +1,9 @@
 import csv
 from datetime import date
 
-from src.transaction import TransactionType
+from src.transaction import Transaction, TransactionType
 from .paths import TRANSACTION_CSV_PATH
 from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from .transaction import Transaction
 
 
 class TransactionRepository:
@@ -24,7 +21,7 @@ class TransactionRepository:
     def get_all(self) -> list[Transaction]:
         transactions = []
 
-        with open(TRANSACTION_CSV_PATH, "r", newline="", encodint="utf-8") as f:
+        with open(TRANSACTION_CSV_PATH, "r", newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 transactions.append(
