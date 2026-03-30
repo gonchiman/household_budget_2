@@ -37,3 +37,38 @@ def test_add_row():
 
         assert rows[0] == expected
 
+def test_get_all():
+    TRANSACTION_CSV_PATH.unlink(missing_ok=True)
+
+    date1 = date.today()
+    amount1 = 1000
+    type1 = TransactionType.INCOME
+    memo1 = "bonus"
+    t1 = Transaction(date1, amount1, type1, memo1)
+
+    date2 = date.today()
+    amount2 = 1000
+    type2 = TransactionType.INCOME
+    memo2 = "bonus"
+    t2 = Transaction(date2, amount2, type2, memo2)
+
+    tr = TransactionRepository()
+    tr.add(t1)
+    tr.add(t2)
+    transactions = tr.get_all()
+
+    assert len(transactions) == 2
+
+    t = transactions[0]
+
+    assert t.transaction_date == date1
+    assert t.amount == amount1
+    assert t.transaction_type == type1
+    assert t.memo == memo1
+
+    t = transactions[1]
+
+    assert t.transaction_date == date2
+    assert t.amount == amount2
+    assert t.transaction_type == type2
+    assert t.memo == memo2
