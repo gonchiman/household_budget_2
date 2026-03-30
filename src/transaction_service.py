@@ -22,3 +22,6 @@ class TransactionService:
             memo=memo
         )
         self._repository.add(transaction)
+
+    def get_all_transactions(self) -> list[Transaction]:
+        return self._repository.get_all()
